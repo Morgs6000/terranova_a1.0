@@ -2,17 +2,12 @@
 
 Shader "Custom/InvertColor" {
     Properties { 
-        _MainTex ("Alpha (A) only", 2D) = "white" {
-
-        } 
-        
+        _MainTex ("Alpha (A) only", 2D) = "white" {}        
         _AlphaCutOff ("Alpha cut off", Range(0,1)) = 1 
     } 
     
     SubShader {
-        Tags {
-            "Queue" = "Transparent+10" 
-        }
+        Tags { "Queue" = "Transparent+10" }
             
         Pass {
             Fog {
