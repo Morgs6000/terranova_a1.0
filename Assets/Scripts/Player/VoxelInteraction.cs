@@ -13,7 +13,7 @@ public class VoxelInteraction : MonoBehaviour {
 
     [SerializeField] private float currentTime;
 
-    //[SerializeField] private InterfaceManager interfaceManager;
+    [SerializeField] private InterfaceManager interfaceManager;
     private bool openMenu;
     private bool openGameMenu;
     
@@ -22,8 +22,8 @@ public class VoxelInteraction : MonoBehaviour {
     }
 
     void Update() {
-        //openMenu = interfaceManager.openMenu;
-        //openGameMenu = interfaceManager.openGameMenu;
+        openMenu = interfaceManager.openMenu;
+        openGameMenu = interfaceManager.openGameMenu;
              
         if(!openGameMenu && !openMenu) {
             RaycastUpdate();

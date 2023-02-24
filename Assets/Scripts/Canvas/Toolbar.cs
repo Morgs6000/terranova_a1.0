@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Toolbar : MonoBehaviour {    
-    //[SerializeField] private InterfaceManager interfaceManager;
+    [SerializeField] private InterfaceManager interfaceManager;
     private bool openMenu;
     private bool openGameMenu;
     
@@ -19,8 +19,8 @@ public class Toolbar : MonoBehaviour {
     }
 
     void Update() {
-        //openMenu = interfaceManager.openMenu;
-        //openGameMenu = interfaceManager.openGameMenu;
+        openMenu = interfaceManager.openMenu;
+        openGameMenu = interfaceManager.openGameMenu;
 
         if(!openGameMenu && !openMenu) {
             KeyInputs();

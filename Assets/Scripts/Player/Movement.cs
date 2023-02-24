@@ -29,7 +29,7 @@ public class Movement : MonoBehaviour {
     private float lastClickTime;
     private const float DOUBLE_CLICK_TIME = 0.2f;
 
-    //[SerializeField] private InterfaceManager interfaceManager;
+    [SerializeField] private InterfaceManager interfaceManager;
     private bool openMenu;
     private bool openGameMenu;
 
@@ -38,8 +38,8 @@ public class Movement : MonoBehaviour {
     }
 
     private void Update() {
-        //openMenu = interfaceManager.openMenu;
-        //openGameMenu = interfaceManager.openGameMenu;
+        openMenu = interfaceManager.openMenu;
+        openGameMenu = interfaceManager.openGameMenu;
 
         if(!openGameMenu) {    
             if(!openMenu) {
