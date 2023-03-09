@@ -7,15 +7,19 @@ using System.Diagnostics;
 
 public class DebugScreen : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI textLeft;
-    [SerializeField] private TextMeshProUGUI textRight;
+    //[SerializeField] private TextMeshProUGUI textRight;
 
     private string debugTextLeft;
-    private string debugTextRight;
+    //private string debugTextRight;
 
     private float frameRate;
     private float timer;
 
     [SerializeField] private Transform player;
+
+    [SerializeField] private Transform cam;
+    private float rangeHit = 5.0f;
+    [SerializeField] private LayerMask groundMask;
 
     private void Start() {
         
@@ -23,51 +27,31 @@ public class DebugScreen : MonoBehaviour {
 
     private void Update() {
         TextLeft();
-        TextRight();
+        //TextRight();
     }
 
     private void TextLeft() {
-        debugTextLeft = (
-            "Minecraft Clone 1.4.7 ("
-        );
+        debugTextLeft = "Minecraft Clone 1.4.7";
+        debugTextLeft += "\n";
+        debugTextLeft += "by Stradivarius Industries";
+
+        debugTextLeft += "\n\n";
 
         FrameRate();
-        
-        debugTextLeft += (
-            ", " + "0" + " chunk updates)" + "\n" +
-            "C: 0/0. F: 0, O: 0. E: 0" + "\n" +
-            "E: 0/0. B: 0, I: 0" + "\n" +
-            "P: 0. T: All: 0" + "\n" +
-            "MultiplayerChunkChache: 0"
-        );
 
         debugTextLeft += "\n\n";
 
         PlayerPosition();
-
         debugTextLeft += "\n";
-
         PlayerDirection();
-
         debugTextLeft += "\n";
-
-        debugTextLeft += (
-            "lc: " + "0" + 
-            " b: " + "Eternal WindowsXP Hills" + 
-            " bl: " + "0" + 
-            " sl: " + "0" + 
-            " rl: " + "0" + 
-            "\n" +
-            
-            "ws: " + "0" + 
-            ", fs: " + "0"
-        );
-
+        Biome();
+        debugTextLeft += "\n";
         PlayerIsGrounded();
 
-        debugTextLeft += (
-            ", fl: " + "0"
-        );
+        debugTextLeft += "\n\n";
+
+        TargetVoxel();
 
         textLeft.text = debugTextLeft;
     }
@@ -82,7 +66,9 @@ public class DebugScreen : MonoBehaviour {
         }
 
         debugTextLeft += (
-            frameRate + " fps"
+            "FPS" + frameRate + "\n" +
+            "minFPS" + "\n" +
+            "maxFPS"
         );
     }
 
@@ -100,6 +86,17 @@ public class DebugScreen : MonoBehaviour {
         );
 
         debugTextLeft += (
+            "X/Y/Z: " + 
+            (playerPos.x).ToString("F0") + ", " +
+            (playerPos.y - 1.0f).ToString("F0") + ", " +
+            (playerPos.z).ToString("F0") + "\n" +
+
+            "Chunk: " + 
+            (chunkPos.x).ToString("F0") + ", " +
+            //(chunkPos.y).ToString("F0") + " (0)" + ", " +
+            (chunkPos.z).ToString("F0")
+
+            /*
             // Posição x do jogador
             "x: " + playerPos.x + 
             // Posição x inteira do jogador
@@ -122,53 +119,67 @@ public class DebugScreen : MonoBehaviour {
             // Chunk que o jogador esta pisando em z
             "c: " + (chunkPos.z).ToString("F0") + 
             " (0)"
+            */
         );
     }
 
     private void PlayerDirection() {
         float aguloInclinacao = player.rotation.eulerAngles.y;
 
-        if(aguloInclinacao > 180) {
-            aguloInclinacao -= 360;
-        }
+        string direction = "NORTH";
 
-        int valor = 0;
-        string direction = "SOUTH";
-
-        if(aguloInclinacao > -45 || aguloInclinacao < 45) {
-            valor = 0;
-            direction = "SOUTH";
-        }
-        if(aguloInclinacao > 45 && aguloInclinacao < 135) {
-            valor = 1;
-            direction = "WEST";
-        }
-        if(aguloInclinacao > 135 || aguloInclinacao < -135) {
-            valor = 2;
+        /*
+        if(aguloInclinacao < 45) {
             direction = "NORTH";
         }
-        if(aguloInclinacao > -135 && aguloInclinacao < -45) {
-            valor = 3;
+        else if(aguloInclinacao < 135) {
             direction = "EAST";
         }
+        else if(aguloInclinacao < 225) {
+            direction = "SOUTH";
+        }
+        else if(aguloInclinacao < 315) {
+            direction = "WEST";
+        }
+        //*/
 
-        //  -45 ||   45 = NORTH
-        //   45 ||  135 = EAST
-        //  135 || -135 = SOUTH
-        // -135 ||  -45 = WEST
-
-        //  -22.5 ||   22.5 = NORTH
-        //   22.5 ||   67.5 = NORTHEAST
-        //   67.5 ||  112.5 = EAST
-        //  112.5 ||  157.5 = SOUTHEAST
-        //  157.5 || -157.5 = SOUTH
-        // -157.5 || -112.5 = SOUTHWEST
-        // -112.5 ||  -67.5 = WEST
-        //  -67.5 ||  -22.5 = NORTHWEST
+        //*
+        if(aguloInclinacao < 22.5) {
+            direction = "NORTH";
+        }
+        else if(aguloInclinacao < 67.5) {
+            direction = "NORTHEAST";
+        }
+        else if(aguloInclinacao < 112.5) {
+            direction = "EAST";
+        }
+        else if(aguloInclinacao < 157.5) {
+            direction = "SOUTHEAST";
+        }
+        else if(aguloInclinacao < 202.5) {
+            direction = "SOUTH";
+        }
+        else if(aguloInclinacao < 247.5) {
+            direction = "SOUTHWEST";
+        }
+        else if(aguloInclinacao < 292.5) {
+            direction = "WEST";
+        }
+        else if(aguloInclinacao < 337.5) {
+            direction = "NORTHWEST";
+        }
+        //*/
         
         debugTextLeft += (
             // Direção cardeal que o jogador esta olhando
-            "f: " + valor + " (" + direction + ") / " + aguloInclinacao
+            "Face : " + direction + " " +
+            aguloInclinacao.ToString("F0") + "º"
+        );
+    }
+
+    private void Biome() {
+        debugTextLeft += (
+            "Biome: " + "Eternal WindowsXP Hills"
         );
     }
 
@@ -177,8 +188,23 @@ public class DebugScreen : MonoBehaviour {
         
         debugTextLeft += (
             // Se o jogador esta pisando no chão
-            ", g: " + isGrounded.ToString().ToLower()
+            "isGround: " + isGrounded.ToString().ToLower()
         );
+    }
+
+    private void TargetVoxel() {
+        RaycastHit hit;
+
+        if(Physics.Raycast(cam.position, cam.forward, out hit, rangeHit, groundMask)) {
+            Vector3 pointPos = hit.point - hit.normal / 2;
+
+            debugTextLeft += (
+                "Target Voxel: " + 
+                Mathf.FloorToInt(pointPos.x) + ", " +
+                Mathf.FloorToInt(pointPos.y) + ", " +
+                Mathf.FloorToInt(pointPos.z)
+            );
+        }
     }
 
     private void TextRight() {
@@ -219,11 +245,13 @@ public class DebugScreen : MonoBehaviour {
         );
         */
 
+        /*
         debugTextRight = (
             "Used memory: 0% (0MB) of 0MB" + "\n" +
             "Allocated momory: 0% (0MB)"
         );
+        */
 
-        textRight.text = debugTextRight;
+        //textRight.text = debugTextRight;
     }
 }

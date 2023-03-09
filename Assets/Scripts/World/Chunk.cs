@@ -109,7 +109,7 @@ public class Chunk : MonoBehaviour {
         if(
             _y == 0 ||
             _y <= 4 && 
-            Random.Range(0, 100) < 50            
+            Random.Range(0, 100) < 50
         ) {
             voxelMap[x, y, z] = VoxelType.bedrock;
         }

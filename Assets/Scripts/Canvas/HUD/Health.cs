@@ -21,45 +21,68 @@ public class Health : MonoBehaviour {
     }
 
     private void Update() {
-        HealthUpdate();
+        HealthUpdateBar();
+        HealthUpdateText();
 
         AddHelth();
         RemoveHealth();
     }
 
-    private void HealthUpdate() {
-        barHealth.fillAmount = currentHealth / maxHealth;
-        currentHealthText.text = maxHealth + " / " + currentHealth.ToString("F0") + " HP";
+    private void HealthUpdateBar() {
+        barHealth.fillAmount = currentHealth / maxHealth;        
+    }
+
+    private void HealthUpdateText() {
+        currentHealthText.text = currentHealth.ToString("F0");
+
+        if(currentHealth <= maxHealth) {
+            currentHealthText.color = Color.green;
+        }
+        if(currentHealth <= (maxHealth * 0.75f)) {
+            currentHealthText.color = Color.yellow;
+        }
+        if(currentHealth <= (maxHealth * 0.50)) {
+            currentHealthText.color = new Color(1.0f, 0.5f, 0.0f);
+        }
+        if(currentHealth <= (maxHealth * 0.25f)) {
+            currentHealthText.color = Color.red;
+        }
     }
 
     private void AddHelth() {
         if(currentHealth < maxHealth) {
-            // Se a barra de FOME estiver em 20 e ainda há saturação.
+            // Se a barra de FOME estiver pelo menos 75% cheia.
             // +1 HP a cada 0,5 segundo.
-            if(hunger.currentHunger == 20) {
+            if(hunger.currentHunger >= (hunger.maxHunger * 0.75f)) {
                 tempoDecorrido += Time.deltaTime;
 
                 if(tempoDecorrido >= 0.5f) {
                     currentHealth++;
                     tempoDecorrido = 0;
                 }
+                if(currentHealth == maxHealth) {
+                    tempoDecorrido = 0;
+                }
             }
-            // Se a barra de FOME estiver em 18.
+            // Se a barra de FOME estiver estiver pelo menos 25% cheia.
             // +1 HP a cada 4 segundos.
-            else if(hunger.currentHunger >= 18) {
+            if(hunger.currentHunger >= (hunger.maxHunger * 0.25f)) {
                 tempoDecorrido += Time.deltaTime;
                 
                 if(tempoDecorrido >= 4.0f) {
                     currentHealth++;
                     tempoDecorrido = 0;
                 }
+                if(currentHealth == maxHealth) {
+                    tempoDecorrido = 0;
+                }
             }
-            /*
-            else {
-                tempoDecorrido = 0;
-            }
-            */
-        }
+            
+            // Na dificuldade Facil, a saúde do jogador para de cair em 50%,
+            // no Normal, para em 5%,
+            // e no Dificil, continua drenando até que o jogador coma alguma coisa ou morra de fome.
+        }        
+        
     }
 
     private void RemoveHealth() {
@@ -74,7 +97,10 @@ public class Health : MonoBehaviour {
                     currentHealth--;
                     tempoDecorrido = 0;
                 }
-            }
-        }
+                if(currentHealth == 0) {
+                    tempoDecorrido = 0;
+                }
+            }            
+        }        
     }
 }

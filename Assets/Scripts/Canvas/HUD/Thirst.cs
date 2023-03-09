@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//using TMPro;
+using TMPro;
 
 public class Thirst : MonoBehaviour {
     [SerializeField] private int maxThirst;
     [SerializeField] public float currentThirst;
     
     [SerializeField] private Image barThirst;
-    //[SerializeField] private TextMeshProUGUI currentThirstText;
+    [SerializeField] private TextMeshProUGUI currentThirstText;
 
     private void Start() {
         maxThirst = 20;
@@ -17,11 +17,28 @@ public class Thirst : MonoBehaviour {
     }
 
     private void Update() {
-        ThirstUpdate();
+        ThirstUpdateBar();
+        ThirstUpdateText();
     }
 
-    private void ThirstUpdate() {
+    private void ThirstUpdateBar() {
         barThirst.fillAmount = currentThirst / maxThirst;
-        //currentThirstText.text = maxThirst + " / " + currentThirst.ToString("F0");
+    }
+
+    private void ThirstUpdateText() {
+        currentThirstText.text = currentThirst.ToString("F0");
+
+        if(currentThirst <= maxThirst) {
+            currentThirstText.color = Color.green;
+        }
+        if(currentThirst <= (maxThirst * 0.75f)) {
+            currentThirstText.color = Color.yellow;
+        }
+        if(currentThirst <= (maxThirst * 0.50)) {
+            currentThirstText.color = new Color(1.0f, 0.5f, 0.0f);
+        }
+        if(currentThirst <= (maxThirst * 0.25f)) {
+            currentThirstText.color = Color.red;
+        }
     }
 }
