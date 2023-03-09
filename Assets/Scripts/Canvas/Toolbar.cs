@@ -9,16 +9,16 @@ public class Toolbar : MonoBehaviour {
     private bool openGameMenu;
     
     [Space(20)]
-    [SerializeField] RectTransform highlight;
-    [SerializeField] ItemSlot[] itemSlots;
+    [SerializeField] private RectTransform highlight;
+    [SerializeField] private ItemSlot[] itemSlots;
 
-    int slotIndex = 0;
+    private int slotIndex = 0;
     
-    void Start() {
+    private void Start() {
         
     }
 
-    void Update() {
+    private void Update() {
         openMenu = interfaceManager.openMenu;
         openGameMenu = interfaceManager.openGameMenu;
 
@@ -30,7 +30,7 @@ public class Toolbar : MonoBehaviour {
         highlight.position = itemSlots[slotIndex].icon.transform.position;
     }
 
-    void KeyInputs() {
+    private void KeyInputs() {
         if(Input.GetKeyDown(KeyCode.Alpha1)) {
             slotIndex = 0;
         }
@@ -58,9 +58,12 @@ public class Toolbar : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.Alpha9)) {
             slotIndex = 8;
         }
+        if(Input.GetKeyDown(KeyCode.Alpha0)) {
+            slotIndex = 9;
+        }
     }
 
-    void ScrollInputs() {
+    private void ScrollInputs() {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         
         if(scroll != 0) {

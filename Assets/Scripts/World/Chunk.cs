@@ -93,6 +93,56 @@ public class Chunk : MonoBehaviour {
         return null;
     }
 
+    private void TreeGen(Vector3 offset) {
+        int x = (int)offset.x;
+        int y = (int)offset.y;
+        int z = (int)offset.z;
+
+        float _x = x + transform.position.x;
+        float _y = y + transform.position.y;
+        float _z = z + transform.position.z;
+
+        _x += World.WorldSizeInVoxels.x;
+        //_y += World.WorldSizeInVoxels.y;
+        _z += World.WorldSizeInVoxels.z;
+
+        if(
+            Random.Range(0, 100) < 1 &&
+            _y == Noise.Perlin(_x, _z) + 1
+        ) {            
+            /*
+            //int leavesWidth = 5;
+            int leavesHeight = Random.Range(3, 5);
+
+            int iter = 0;
+            
+            for(int yL = y + 0; yL < y + leavesHeight; yL++) {
+                for(int xL = x - 2 + iter / 2; xL <  x + 3 - iter / 2; xL++) {                
+                    for(int zL = z - 2 + iter / 2; zL <  z + 3 - iter / 2; zL++) {
+                        if(
+                            xL >= 0 && xL < ChunkSizeInVoxels.x &&
+                            yL >= 0 && yL < ChunkSizeInVoxels.y &&
+                            zL >= 0 && zL < ChunkSizeInVoxels.z
+                        ) {
+                            voxelMap[xL, yL + 3, zL] = VoxelType.oak_leaves;
+                        } 
+                    }                   
+                }
+
+                iter++;
+            }
+            */
+
+            int treeHeight = Random.Range(3, 5);
+
+            for(int i = 0; i < treeHeight; i++) {
+                if(y + i < ChunkSizeInVoxels.y) {
+                    voxelMap[x, y + i, z] = VoxelType.oak_log;
+                }                
+            }
+        }
+    }
+
     private void VoxelLayers(Vector3 offset) {
         int x = (int)offset.x;
         int y = (int)offset.y;
@@ -102,9 +152,9 @@ public class Chunk : MonoBehaviour {
         float _y = y + transform.position.y;
         float _z = z + transform.position.z;
 
-        _x += (World.WorldSizeInVoxels.x);
-        //_y += (World.WorldSizeInVoxels.y);
-        _z += (World.WorldSizeInVoxels.z);
+        _x += World.WorldSizeInVoxels.x;
+        //_y += World.WorldSizeInVoxels.y;
+        _z += World.WorldSizeInVoxels.z;
 
         if(
             _y == 0 ||
@@ -139,6 +189,7 @@ public class Chunk : MonoBehaviour {
             for(int y = 0; y < ChunkSizeInVoxels.y; y++) {
                 for(int z = 0; z < ChunkSizeInVoxels.z; z++) {
                     VoxelLayers(new Vector3(x, y, z));
+                    TreeGen(new Vector3(x, y, z));
                 }
             }
         }
@@ -356,6 +407,25 @@ public class Chunk : MonoBehaviour {
         // BEDROCK
         if(voxelType == VoxelType.bedrock) {
             UVAdd(new Vector2(1, 1));
+        }
+
+        // OAK LOG
+        if(voxelType == VoxelType.oak_log) {
+            if(
+                side == VoxelSide.TOP || 
+                side == VoxelSide.BOTTOM
+            ) {
+                UVAdd(new Vector2(5, 1));
+
+                return;
+            }
+
+            UVAdd(new Vector2(4, 1));
+        }
+
+        // OAK LEAVES
+        if(voxelType == VoxelType.oak_leaves) {
+            UVAdd(new Vector2(5, 3));
         }
     }
 

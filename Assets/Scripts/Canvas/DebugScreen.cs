@@ -17,6 +17,8 @@ public class DebugScreen : MonoBehaviour {
 
     [SerializeField] private Transform player;
 
+    private string direction;
+
     [SerializeField] private Transform cam;
     private float rangeHit = 5.0f;
     [SerializeField] private LayerMask groundMask;
@@ -31,7 +33,7 @@ public class DebugScreen : MonoBehaviour {
     }
 
     private void Text() {
-        debugText = "Minecraft Clone 1.4.7";
+        debugText = "Terranova | version a1.0";
         debugText += "\n";
         debugText += "by Stradivarius Industries";
 
@@ -66,9 +68,9 @@ public class DebugScreen : MonoBehaviour {
         }
 
         debugText += (
-            "FPS " + frameRate + "\n" +
-            "minFPS" + "\n" +
-            "maxFPS"
+            frameRate + " fps" + "\n" +
+            "0" + " fpsMin" + "\n" +
+            "0" + " fpsMax"
         );
     }
 
@@ -86,93 +88,37 @@ public class DebugScreen : MonoBehaviour {
         );
 
         debugText += (
-            "X/Y/Z: " + 
+            "XYZ: " + 
             (playerPos.x).ToString("F0") + ", " +
             (playerPos.y - 1.0f).ToString("F0") + ", " +
             (playerPos.z).ToString("F0") + "\n" +
 
             "Chunk: " + 
             (chunkPos.x).ToString("F0") + ", " +
-            //(chunkPos.y).ToString("F0") + " (0)" + ", " +
+            //(chunkPos.y).ToString("F0") + ", " +
             (chunkPos.z).ToString("F0")
-
-            /*
-            // Posição x do jogador
-            "x: " + playerPos.x + 
-            // Posição x inteira do jogador
-            " (" + (playerPos.x).ToString("F0") + ") // " + 
-            // Chunk que o jogador esta pisando em x
-            "c: " + (chunkPos.x).ToString("F0") + 
-            " (0)" + 
-            "\n" +
-            
-            // Posição y do jogador
-            "y: " + playerPos.y +  " (feet pos, " + 
-            // Posição y do jogador + altura dos olhos
-            (playerPos.y + 1.62f).ToString() + " eyes pos)" + 
-            "\n" +
-            
-            // Posição z do jogador
-            "z: " + playerPos.z + 
-            // Posição z inteira do jogador
-            " (" + (playerPos.z).ToString("F0") + ") // " + 
-            // Chunk que o jogador esta pisando em z
-            "c: " + (chunkPos.z).ToString("F0") + 
-            " (0)"
-            */
         );
     }
 
     private void PlayerDirection() {
         float aguloInclinacao = player.rotation.eulerAngles.y;
 
-        string direction = "North";
-
-        /*
         if(aguloInclinacao < 45) {
-            direction = "NORTH";
+            direction = "north (positive Z)";
         }
         else if(aguloInclinacao < 135) {
-            direction = "EAST";
+            direction = "east (positive X)";
         }
         else if(aguloInclinacao < 225) {
-            direction = "SOUTH";
+            direction = "south (negative Z)";
         }
         else if(aguloInclinacao < 315) {
-            direction = "WEST";
+            direction = "west (negative X)";
         }
-        //*/
-
-        //*
-        if(aguloInclinacao < 22.5) {
-            direction = "North";
-        }
-        else if(aguloInclinacao < 67.5) {
-            direction = "Northeast";
-        }
-        else if(aguloInclinacao < 112.5) {
-            direction = "East";
-        }
-        else if(aguloInclinacao < 157.5) {
-            direction = "Southeste";
-        }
-        else if(aguloInclinacao < 202.5) {
-            direction = "South";
-        }
-        else if(aguloInclinacao < 247.5) {
-            direction = "Southwest";
-        }
-        else if(aguloInclinacao < 292.5) {
-            direction = "West";
-        }
-        else if(aguloInclinacao < 337.5) {
-            direction = "Northwest";
-        }
-        //*/
         
         debugText += (
             // Direção cardeal que o jogador esta olhando
-            "Face : " + direction /*+ " " +
+            "Facing : " + direction /*+ " " +
             aguloInclinacao.ToString("F0") + "º"*/
         );
     }
@@ -198,11 +144,18 @@ public class DebugScreen : MonoBehaviour {
         if(Physics.Raycast(cam.position, cam.forward, out hit, rangeHit, groundMask)) {
             Vector3 pointPos = hit.point - hit.normal / 2;
 
+            Chunk c = Chunk.GetChunk(new Vector3(
+                Mathf.FloorToInt(pointPos.x),
+                Mathf.FloorToInt(pointPos.y),
+                Mathf.FloorToInt(pointPos.z)
+            ));
+            
             debugText += (
                 "Target Voxel: " + 
                 Mathf.FloorToInt(pointPos.x) + ", " +
                 Mathf.FloorToInt(pointPos.y) + ", " +
-                Mathf.FloorToInt(pointPos.z)
+                Mathf.FloorToInt(pointPos.z) + "\n" +
+                c.GetBlock(pointPos).ToString()
             );
         }
     }

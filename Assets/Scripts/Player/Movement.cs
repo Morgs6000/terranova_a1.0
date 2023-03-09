@@ -50,7 +50,10 @@ public class Movement : MonoBehaviour {
                 MovementUpdate();
                 JumpUpdate();
                 SprintUpdate();
-            }    
+            }
+            else {
+                Cursor.lockState = CursorLockMode.None;
+            }
 
             FallUpdate();
 
