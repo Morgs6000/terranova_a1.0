@@ -40,18 +40,24 @@ public class VoxelInteraction : MonoBehaviour {
     }
 
     private void Destroy(RaycastHit hit) {
-        if(Input.GetMouseButtonDown(0)) {
-            Vector3 pointPos = hit.point - hit.normal / 2;
+        if(Input.GetMouseButton(0)) {
+            currentTime += Time.deltaTime;
 
-            Chunk c = Chunk.GetChunk(new Vector3(
-                Mathf.FloorToInt(pointPos.x),
-                Mathf.FloorToInt(pointPos.y),
-                Mathf.FloorToInt(pointPos.z)
-            ));
+            if(Input.GetMouseButtonDown(0) || currentTime >= 0.25f) {
+                Vector3 pointPos = hit.point - hit.normal / 2;
 
-            Debug.Log("Voxel type destroyed: " + c.GetBlock(pointPos).ToString());
+                Chunk c = Chunk.GetChunk(new Vector3(
+                    Mathf.FloorToInt(pointPos.x),
+                    Mathf.FloorToInt(pointPos.y),
+                    Mathf.FloorToInt(pointPos.z)
+                ));
 
-            c.SetBlock(pointPos, VoxelType.air);
+                Debug.Log("Voxel type destroyed: " + c.GetBlock(pointPos).ToString());
+
+                c.SetBlock(pointPos, VoxelType.air);
+
+                currentTime = 0.0f;
+            }
         }
     }
 
@@ -59,7 +65,7 @@ public class VoxelInteraction : MonoBehaviour {
         if(Input.GetMouseButton(1)) {
             currentTime += Time.deltaTime;
 
-            if(currentTime >= 0.25f) {
+            if(Input.GetMouseButtonDown(1) || currentTime >= 0.25f) {
                 Vector3 pointPos = hit.point + hit.normal / 2;
 
                 //*
@@ -83,11 +89,10 @@ public class VoxelInteraction : MonoBehaviour {
 
                 c.SetBlock(pointPos, toolbar.GetCurrentItem()); 
 
+                Debug.Log("Voxel type added: " + c.GetBlock(pointPos).ToString());
+
                 currentTime = 0.0f;
             }
-        }
-        else {
-            currentTime = 0.25f;
         }
     }
 }

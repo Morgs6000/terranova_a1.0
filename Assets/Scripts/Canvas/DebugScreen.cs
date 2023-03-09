@@ -6,11 +6,11 @@ using TMPro;
 using System.Diagnostics;
 
 public class DebugScreen : MonoBehaviour {
-    [SerializeField] private TextMeshProUGUI textLeft;
-    //[SerializeField] private TextMeshProUGUI textRight;
+    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI text1;
 
-    private string debugTextLeft;
-    //private string debugTextRight;
+    private string debugText;
+    private string debugText1;
 
     private float frameRate;
     private float timer;
@@ -26,34 +26,34 @@ public class DebugScreen : MonoBehaviour {
     }
 
     private void Update() {
-        TextLeft();
-        //TextRight();
+        Text();
+        Text1();
     }
 
-    private void TextLeft() {
-        debugTextLeft = "Minecraft Clone 1.4.7";
-        debugTextLeft += "\n";
-        debugTextLeft += "by Stradivarius Industries";
+    private void Text() {
+        debugText = "Minecraft Clone 1.4.7";
+        debugText += "\n";
+        debugText += "by Stradivarius Industries";
 
-        debugTextLeft += "\n\n";
+        debugText += "\n\n";
 
         FrameRate();
 
-        debugTextLeft += "\n\n";
+        debugText += "\n\n";
 
         PlayerPosition();
-        debugTextLeft += "\n";
+        debugText += "\n";
         PlayerDirection();
-        debugTextLeft += "\n";
+        debugText += "\n";
         Biome();
-        debugTextLeft += "\n";
+        debugText += "\n";
         PlayerIsGrounded();
 
-        debugTextLeft += "\n\n";
+        debugText += "\n\n";
 
         TargetVoxel();
 
-        textLeft.text = debugTextLeft;
+        text.text = debugText;
     }
 
     private void FrameRate() {
@@ -65,8 +65,8 @@ public class DebugScreen : MonoBehaviour {
             timer += Time.deltaTime;
         }
 
-        debugTextLeft += (
-            "FPS" + frameRate + "\n" +
+        debugText += (
+            "FPS " + frameRate + "\n" +
             "minFPS" + "\n" +
             "maxFPS"
         );
@@ -85,7 +85,7 @@ public class DebugScreen : MonoBehaviour {
             playerPos.z / Chunk.ChunkSizeInVoxels.z
         );
 
-        debugTextLeft += (
+        debugText += (
             "X/Y/Z: " + 
             (playerPos.x).ToString("F0") + ", " +
             (playerPos.y - 1.0f).ToString("F0") + ", " +
@@ -126,7 +126,7 @@ public class DebugScreen : MonoBehaviour {
     private void PlayerDirection() {
         float aguloInclinacao = player.rotation.eulerAngles.y;
 
-        string direction = "NORTH";
+        string direction = "North";
 
         /*
         if(aguloInclinacao < 45) {
@@ -145,40 +145,40 @@ public class DebugScreen : MonoBehaviour {
 
         //*
         if(aguloInclinacao < 22.5) {
-            direction = "NORTH";
+            direction = "North";
         }
         else if(aguloInclinacao < 67.5) {
-            direction = "NORTHEAST";
+            direction = "Northeast";
         }
         else if(aguloInclinacao < 112.5) {
-            direction = "EAST";
+            direction = "East";
         }
         else if(aguloInclinacao < 157.5) {
-            direction = "SOUTHEAST";
+            direction = "Southeste";
         }
         else if(aguloInclinacao < 202.5) {
-            direction = "SOUTH";
+            direction = "South";
         }
         else if(aguloInclinacao < 247.5) {
-            direction = "SOUTHWEST";
+            direction = "Southwest";
         }
         else if(aguloInclinacao < 292.5) {
-            direction = "WEST";
+            direction = "West";
         }
         else if(aguloInclinacao < 337.5) {
-            direction = "NORTHWEST";
+            direction = "Northwest";
         }
         //*/
         
-        debugTextLeft += (
+        debugText += (
             // Direção cardeal que o jogador esta olhando
-            "Face : " + direction + " " +
-            aguloInclinacao.ToString("F0") + "º"
+            "Face : " + direction /*+ " " +
+            aguloInclinacao.ToString("F0") + "º"*/
         );
     }
 
     private void Biome() {
-        debugTextLeft += (
+        debugText += (
             "Biome: " + "Eternal WindowsXP Hills"
         );
     }
@@ -186,7 +186,7 @@ public class DebugScreen : MonoBehaviour {
     private void PlayerIsGrounded() {
         bool isGrounded = Movement.isGrounded;
         
-        debugTextLeft += (
+        debugText += (
             // Se o jogador esta pisando no chão
             "isGround: " + isGrounded.ToString().ToLower()
         );
@@ -198,7 +198,7 @@ public class DebugScreen : MonoBehaviour {
         if(Physics.Raycast(cam.position, cam.forward, out hit, rangeHit, groundMask)) {
             Vector3 pointPos = hit.point - hit.normal / 2;
 
-            debugTextLeft += (
+            debugText += (
                 "Target Voxel: " + 
                 Mathf.FloorToInt(pointPos.x) + ", " +
                 Mathf.FloorToInt(pointPos.y) + ", " +
@@ -207,7 +207,7 @@ public class DebugScreen : MonoBehaviour {
         }
     }
 
-    private void TextRight() {
+    private void Text1() {
         /*
         // Cria um objeto PerformanceCounter para acessar o contador de desempenho "Memória total"
         PerformanceCounter memoriaTotalCounter = new PerformanceCounter("Memory", "Total Physical Memory");
@@ -245,13 +245,11 @@ public class DebugScreen : MonoBehaviour {
         );
         */
 
-        /*
-        debugTextRight = (
-            "Used memory: 0% (0MB) of 0MB" + "\n" +
-            "Allocated momory: 0% (0MB)"
+        debugText1 = (
+            "Allocated momory: 0% (0MB)" + "\n" +
+            "Used memory: 0% (0MB) of 0MB"
         );
-        */
 
-        //textRight.text = debugTextRight;
+        text1.text = debugText1;
     }
 }
