@@ -11,6 +11,7 @@ public class Toolbar : MonoBehaviour {
     [Space(20)]
     [SerializeField] private RectTransform highlight;
     [SerializeField] private ItemSlot[] itemSlots;
+    //[SerializeField] InventorySlot[] inventorySlots;
 
     private int slotIndex = 0;
     

@@ -50,6 +50,8 @@ public class Movement : MonoBehaviour {
                 MovementUpdate();
                 JumpUpdate();
                 SprintUpdate();
+
+                FlyMovement();
             }
             else {
                 Cursor.lockState = CursorLockMode.None;
@@ -90,9 +92,11 @@ public class Movement : MonoBehaviour {
     private void FallUpdate() {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        velocity.y += fallSpeed * Time.deltaTime;
+        if(fly == false) {
+            velocity.y += fallSpeed * Time.deltaTime;
 
-        characterController.Move(velocity * Time.deltaTime);
+            characterController.Move(velocity * Time.deltaTime);
+        }
 
         if(isGrounded && velocity.y < 0) {
             velocity.y = -2.0f;
@@ -109,11 +113,21 @@ public class Movement : MonoBehaviour {
     }
 
     private void SprintUpdate() {
-        if(running == false) {
-            speed = walkingSpeed;
+        if(isGrounded == true || fly == false) {
+            if(running == false) {
+                speed = walkingSpeed;
+            }
+            if(running == true) {
+                speed = sprintingSpeed;
+            }
         }
-        if(running == true) {
-            speed = sprintingSpeed;
+        else if(isGrounded == false && fly == true) {
+            if(running == false) {
+                speed = flyingSpeed;
+            }
+            if(running == true) {
+                speed = sprintFlyingSpeed;
+            }
         }
 
         // Pressionar LeftControl corre.
@@ -197,4 +211,61 @@ public class Movement : MonoBehaviour {
             hit.gameObject.GetComponent<CharacterController>().Move(transform.forward * 10 * Time.deltaTime);
         }
     }
+
+    /* VOO DO CRIATIVO */
+
+    [SerializeField] private bool fly;
+
+    private float flyingSpeed = 10.89f;
+    private float sprintFlyingSpeed = 21.78f;
+
+    private void FlyMovement() {
+        if(isGrounded == true || fly == false) {
+            isGrounded = true;
+            fly = false;
+
+            // Pressionar Space duas vezes, faz voar.
+            if(Input.GetButtonDown("Space")) {
+                float timeSinceLastClick = Time.time - lastClickTime;
+
+                if(timeSinceLastClick <= DOUBLE_CLICK_TIME) {
+                    fly = true;
+                }
+                else {
+                    fly = false;
+                }
+
+                lastClickTime = Time.time;
+            }
+        }
+        else if(isGrounded == false && fly == true) {
+            // Pressionar Space anda para cima.
+            if(Input.GetButton("Space")) {
+                characterController.Move(transform.up * flyingSpeed * Time.deltaTime);
+            }
+
+            // Pressionar LeftShift anda para baixo.
+            else if(Input.GetButton("LShift")) {
+                characterController.Move(-transform.up * flyingSpeed * Time.deltaTime);
+            }
+
+            // Pressionar Space duas vezes, faz parar de voar.
+            if(Input.GetButtonDown("Space")) {
+                float timeSinceLastClick = Time.time - lastClickTime;
+
+                if(timeSinceLastClick <= DOUBLE_CLICK_TIME) {
+                    fly = false;
+                }
+                else {
+                    fly = true;
+                }
+
+                lastClickTime = Time.time;
+            }
+        }
+    }
+
+    /* MODO ESPECTADOR */
+
+    
 }

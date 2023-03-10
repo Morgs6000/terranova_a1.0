@@ -21,7 +21,7 @@ public class Chunk : MonoBehaviour {
 
     private List<Vector2> uv = new List<Vector2>();
 
-    public static Vector3 ChunkSizeInVoxels = new Vector3(16, 16, 16);
+    public static Vector3 ChunkSizeInVoxels = new Vector3(16, 256, 16);
 
     private VoxelType[,,] voxelMap = new VoxelType[(int)ChunkSizeInVoxels.x, (int)ChunkSizeInVoxels.y, (int)ChunkSizeInVoxels.z];
 
@@ -217,14 +217,14 @@ public class Chunk : MonoBehaviour {
                 for(int z = 0; z < ChunkSizeInVoxels.z; z++) {
                     if(voxelMap[x, y, z] != 0) {
                         VoxelGen(new Vector3(x, y, z));
-                        VoxelColliderGen(new Vector3(x, y, z));
+                        //VoxelColliderGen(new Vector3(x, y, z));
                     }
                 }
             }
         }
 
         MeshGen();
-        MeshColliderGen();
+        //MeshColliderGen();
     }
 
     private void MeshGen() {
@@ -237,7 +237,7 @@ public class Chunk : MonoBehaviour {
         voxelMesh.Optimize();
 
         meshFilter.mesh = voxelMesh;
-        //meshCollider.sharedMesh = voxelMesh;
+        meshCollider.sharedMesh = voxelMesh;
     }
 
     private void VoxelGen(Vector3 offset) {
@@ -429,6 +429,7 @@ public class Chunk : MonoBehaviour {
         }
     }
 
+    /*
     private void MeshColliderGen() {
         Mesh voxelMeshCollider = new Mesh();
         voxelMeshCollider.name = "Chunk Collider";
@@ -510,4 +511,5 @@ public class Chunk : MonoBehaviour {
 
         vertexIndexCollider += 4;
     }
+    */
 }

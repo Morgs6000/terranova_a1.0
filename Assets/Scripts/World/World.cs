@@ -23,9 +23,9 @@ public class World : MonoBehaviour {
     );
 
     [SerializeField] private GameObject chunkPrefab;
-    //[SerializeField] private GameObject player;
+    [SerializeField] private GameObject player;
 
-    //private int viewDistance = 5;
+    private int viewDistance = 5;
 
     void Start() {
         //mainCamera.SetActive(true);
@@ -110,7 +110,7 @@ public class World : MonoBehaviour {
         //player.SetActive(true);
     }
 
-    /*
+    //*
     private IEnumerator LoadingChunks() {
         int posX = Mathf.FloorToInt(player.transform.position.x / Chunk.ChunkSizeInVoxels.x);
         int posZ = Mathf.FloorToInt(player.transform.position.z / Chunk.ChunkSizeInVoxels.z);
@@ -118,12 +118,16 @@ public class World : MonoBehaviour {
         for(int x = -viewDistance; x < viewDistance; x++) {
             for(int z = -viewDistance; z < viewDistance; z++) {                    
                 for(int y = 0; y < WorldSizeInChunks.y; y++) {
-                    InstantiateChunk(new Vector3(x, y, z));                    
+                    InstantiateChunk(new Vector3(
+                        x + posX,
+                        y, 
+                        z + posZ
+                    ));                    
                 }
 
                 yield return null;
             }
         }
     }
-    */
+    //*/
 }
