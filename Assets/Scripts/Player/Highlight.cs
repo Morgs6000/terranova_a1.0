@@ -42,8 +42,6 @@ public class Highlight : MonoBehaviour {
         RaycastHit hit;
 
         if(Physics.Raycast(cam.position, cam.forward, out hit, rangeHit, groundMask)) {
-            highlight.SetActive(true);
-
             Vector3 pointPos = hit.point - hit.normal / 2;
             
             highlight.transform.position = new Vector3(
@@ -51,6 +49,8 @@ public class Highlight : MonoBehaviour {
                 Mathf.FloorToInt(pointPos.y),
                 Mathf.FloorToInt(pointPos.z)
             );
+
+            highlight.SetActive(true);
         }
         else {
             highlight.SetActive(false);          

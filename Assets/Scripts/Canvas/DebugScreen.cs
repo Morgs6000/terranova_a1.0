@@ -50,6 +50,8 @@ public class DebugScreen : MonoBehaviour {
         Biome();
         debugText += "\n";
         PlayerIsGrounded();
+        debugText += "\n";
+        GameMode();
 
         debugText += "\n\n";
 
@@ -138,6 +140,10 @@ public class DebugScreen : MonoBehaviour {
         );
     }
 
+    private void GameMode() {
+        debugText += "Game Mode: " + "creative";
+    }
+
     private void TargetVoxel() {
         RaycastHit hit;
 
@@ -151,7 +157,7 @@ public class DebugScreen : MonoBehaviour {
             ));
             
             debugText += (
-                "Target Voxel: " + 
+                "Targeted Voxel: " + 
                 Mathf.FloorToInt(pointPos.x) + ", " +
                 Mathf.FloorToInt(pointPos.y) + ", " +
                 Mathf.FloorToInt(pointPos.z) + "\n" +

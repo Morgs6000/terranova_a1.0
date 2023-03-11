@@ -17,7 +17,7 @@ public class Chunk : MonoBehaviour {
 
     private List<Vector3> verticesCollider = new List<Vector3>();
     private List<int> trianglesCollider = new List<int>();
-    private int vertexIndexCollider;
+    //private int vertexIndexCollider;
 
     private List<Vector2> uv = new List<Vector2>();
 
@@ -207,10 +207,12 @@ public class Chunk : MonoBehaviour {
 
         vertexIndex = 0;
 
+        /*
         verticesCollider.Clear();
         trianglesCollider.Clear();
 
         vertexIndexCollider = 0;
+        */
 
         for(int x = 0; x < ChunkSizeInVoxels.x; x++) {
             for(int y = 0; y < ChunkSizeInVoxels.y; y++) {
